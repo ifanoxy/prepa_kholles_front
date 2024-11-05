@@ -1,15 +1,15 @@
-import axios, {AxiosInstance, AxiosRequestConfig} from 'axios';
-import {ApiError, ApiResponse} from './types';
+import axios, {type AxiosInstance, type AxiosRequestConfig} from 'axios';
+import type {ApiError, ApiResponse} from './types';
 import {PostUserGenToken} from "./routes/user/post_user_gen_token";
 import {PostUserAuth} from "./routes/user/post_user_auth";
-import type {UserAuthBody, UserGenTokenBody} from "@/plugins/API/routes/user/Users";
+import type {UserAuthBody, UserAuthBodyToken, UserAuthData, UserGenTokenBody} from "@/plugins/API/routes/user/Users";
 import {GetUsers} from "@/plugins/API/routes/users/get_users";
 
 class XApiClient {
     private client: AxiosInstance;
     public route: {
         user: {
-            isAuth: (options: UserAuthBody) => Promise<UserAuthBody>;
+            isAuth: (options: UserAuthBody) => Promise<ApiResponse<UserAuthData<UserAuthBody extends UserAuthBodyToken ? 'user_id' : 'token'>>>;
             createToken: (options: UserGenTokenBody) => Promise<UserGenTokenBody>
         },
         users: {
@@ -20,8 +20,8 @@ class XApiClient {
     constructor()
     {
         this.client = axios.create({
-            baseURL: 'http://localhost:2000',
-            timeout: 5000,
+            baseURL: 'http://172.20.10.3:2000',
+            timeout: 10000,
             headers: { 'Content-Type': 'application/json' },
         });
 
@@ -91,10 +91,11 @@ class XApiClient {
         }
     }
 
-    private handleError(error: any): ApiError {
-        if (axios.isAxiosError(error) && error.response) {
+    private handleError(error: unknown): ApiError {
+        console.log(error);
+            if (axios.isAxiosError(error) && error.response) {
             return {
-                message: error.response.data.message || 'Unknown Error',
+                message: (Array.isArray(error.response.data.errors) ? error.response.data.errors.map((x: { message: string }) => x?.message).join("\n") : error.response.data.errors.message) || 'Unknown Error',
                 code: error.response.status,
             };
         }
