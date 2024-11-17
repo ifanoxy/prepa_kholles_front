@@ -58,11 +58,15 @@ export default {
         async save() {
             this.loading = true;
 
-            await ApiClient.route.sujets.create({
-                chapitre_id: this.chapitre.id,
+            console.log("azdjzad")
+
+            const res =await ApiClient.route.sujets.create({
+                chapitre_id: this?.chapitre?.id,
                 matiere_id: this.matiere.id,
                 image: this.src,
             });
+
+            console.log(res)
 
             this.$emit("created");
 
@@ -75,7 +79,7 @@ export default {
 <template>
     <Dialog class="mx-2" v-model:visible="visible" modal header="Ajouter un sujet" :style="{ width: '25rem' }">
         <span class="text-surface-500 dark:text-surface-400 block mb-8"></span>
-        <div class="flex items-center flex-col gap-4 mb-4">
+        <div class="flex items-center flex-col gap-4">
             <label for="username" class="font-semibold">Photo du sujet</label>
             <img :src="src ? src : 'https://static.vecteezy.com/ti/vecteur-libre/p2/21736279-transparent-contexte-4k-vide-la-grille-a-carreaux-disposition-fond-d-ecran-gratuit-vectoriel.jpg'" alt="Image" class="shadow-md rounded-xl w-full sm:w-64" />
             <div class="flex gap-4 mb-4">
