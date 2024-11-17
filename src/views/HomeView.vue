@@ -1,14 +1,11 @@
 <script lang="ts">
 import {ApiClient} from "@/plugins/API/client";
-import {Buffer} from "buffer";
 
 export default {
     props: ['reload'],
     watch: {
         async reload() {
             this.sujets = (await ApiClient.route.sujets.getAll()).data;
-            for (const sujet of this.sujets)
-                sujet.image = Buffer.from(sujet.image, "base64");
         }
     },
     data() {
@@ -18,9 +15,6 @@ export default {
     },
     async mounted() {
         this.sujets = (await ApiClient.route.sujets.getAll()).data;
-        console.log(this.sujets);
-        for (const sujet of this.sujets)
-            sujet.image = Buffer.from(sujet.image, "base64");
     }
 }
 </script>

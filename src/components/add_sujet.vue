@@ -58,13 +58,11 @@ export default {
         async save() {
             this.loading = true;
 
-            const res = await ApiClient.route.sujets.create({
+            await ApiClient.route.sujets.create({
                 chapitre_id: this?.chapitre?.id,
                 matiere_id: this.matiere.id,
                 image: this.src,
             });
-
-            console.log(res)
 
             this.$emit("created");
 
