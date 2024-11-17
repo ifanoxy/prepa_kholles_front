@@ -121,6 +121,7 @@ class XApiClient {
     }
 
     private handleError(error: unknown): ApiError {
+        if (!localStorage.getItem('token'))return;
         console.log(error);
             if (axios.isAxiosError(error) && error.response) {
             return {

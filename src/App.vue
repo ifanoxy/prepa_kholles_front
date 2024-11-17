@@ -1,6 +1,4 @@
 <script lang="ts">
-
-
 import Bottom_navbar from "@/components/bottom_navbar.vue";
 import Add_sujet from "@/components/add_sujet.vue";
 
@@ -26,7 +24,7 @@ export default {
 
 <template>
     <div class="flex grow h-dvh flex-col">
-        <Add_sujet @created="sujet_created" v-if="true" @close="this.open_add_sujet = false" :on_open="this.open_add_sujet" />
+        <Add_sujet @created="sujet_created" v-if="$route.name != 'login'" @close="this.open_add_sujet = false" :on_open="this.open_add_sujet" />
         <div class="overflow-auto flex grow">
             <RouterView :reload="reload" ref="routerView" />
         </div>
