@@ -1,11 +1,12 @@
 <script lang="ts">
 import Camera from "@/components/Camera.vue";
 import {isMobile} from "@/plugins/utils/isMobile";
+import {ApiClient} from "@/plugins/API/client";
 
 export default {
     components: {Camera},
     props: ['on_open'],
-    emits: ['close'],
+    emits: ['close', 'created'],
     watch: {
         on_open: function() {
             this.src = false;
@@ -21,12 +22,17 @@ export default {
             visible: false,
             src: null,
             matiere: null,
+            loading: false,
+            chapitre: null,
             camera_visible: false,
-            matieres: []
+            matieres: [],
+            chapitres: [],
+            selected_chapitres: [],
         }
     },
-    mounted() {
-
+    async mounted() {
+        this.matieres = (await ApiClient.route.matieres.getAll()).data;
+        this.chapitres = (await ApiClient.route.chapitres.getAll()).data;
     },
     methods: {
         isMobile,
@@ -43,6 +49,24 @@ export default {
             };
 
             reader.readAsDataURL(file);
+        },
+        onMatiereSelect() {
+            if (this.matiere)
+                this.selected_chapitres = this.chapitres.filter(x => x.matiere_id === this.matiere.id);
+            else this.selected_chapitres = [];
+        },
+        async save() {
+            this.loading = true;
+
+            await ApiClient.route.sujets.create({
+                chapitre_id: this.chapitre_id,
+                matiere_id: this.matiere.id,
+                image: this.src,
+            });
+
+            this.$emit("created");
+
+            this.visible = false;
         }
     }
 }
@@ -59,17 +83,19 @@ export default {
                     <Camera @image_upload="onPhoto" :active="camera_visible"></Camera>
                 </Drawer>
 
-                <Button v-if="!isMobile()" severity="secondary" size="small" label="Prendre une photo" icon="pi pi-camera" @click="camera_visible = true" />
+                <Button :disabled="loading" v-if="!isMobile()" severity="secondary" size="small" label="Prendre une photo" icon="pi pi-camera" @click="camera_visible = true" />
 
-                <FileUpload :choose-label="isMobile() ? 'Prendre une photo' : 'Importer'" accept="image/*" :maxFileSize="16_000_000" mode="basic" @select="onFileSelect" customUpload auto severity="secondary" class="whitespace-nowrap text-xs p-button-outlined" />
+                <FileUpload :disabled="loading" :choose-label="isMobile() ? 'Prendre une photo' : 'Importer'" accept="image/*" :maxFileSize="16_000_000" mode="basic" @select="onFileSelect" customUpload auto severity="secondary" class="whitespace-nowrap text-xs p-button-outlined" />
             </div>
 
             <label for="matiere" class="font-semibold">Matière</label>
-            <Select v-model="matiere" :options="cities" optionLabel="matiere" placeholder="Sélectionner une matière" class="w-full md:w-56" />
+            <Select :disabled="loading" @value-change="onMatiereSelect" v-model="matiere" :options="matieres" optionLabel="name" placeholder="Sélectionner une matière" class="w-full md:w-56" />
+
+            <Select :disabled="loading" v-if="selected_chapitres.length >= 1" @value-change="onMatiereSelect" v-model="chapitre" :options="selected_chapitres" optionLabel="name" placeholder="Sélectionner un chapitre" class="w-full md:w-56" />
         </div>
         <div class="flex gap-2">
-            <Button class="w-full" type="button" label="Annuler" severity="secondary" @click="visible = false"></Button>
-            <Button class="w-full" type="button" label="Sauvegarder" @click="visible = false"></Button>
+            <Button :disabled="loading" class="w-full" type="button" label="Annuler" severity="secondary" @click="visible = false"></Button>
+            <Button :disabled="!src || !matiere || loading" class="w-full" type="button" label="Sauvegarder" @click="save"></Button>
         </div>
     </Dialog>
 </template>

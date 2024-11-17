@@ -8,6 +8,9 @@ import PrimeVue from 'primevue/config';
 import plugin from './plugins/Plugins';
 import Aura from '@primevue/themes/aura';
 import {ToastService} from "primevue";
+import { Buffer } from 'buffer';
+
+window.Buffer = Buffer;
 
 const app = createApp(App)
 

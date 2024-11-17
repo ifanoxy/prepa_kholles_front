@@ -15,6 +15,7 @@ declare module 'vue' {
     Bottom_navbar: typeof import('./src/components/bottom_navbar.vue')['default']
     Button: typeof import('primevue/button')['default']
     Camera: typeof import('./src/components/Camera.vue')['default']
+    Card: typeof import('primevue/card')['default']
     Dialog: typeof import('primevue/dialog')['default']
     Drawer: typeof import('primevue/drawer')['default']
     FileUpload: typeof import('primevue/fileupload')['default']

@@ -9,11 +9,16 @@ export default {
     data: () => {
         return {
             open_add_sujet: false,
+            reload: 0,
         }
     },
     methods: {
         add_sujet_dialog: function () {
             this.open_add_sujet = true;
+        },
+        sujet_created: function () {
+            this.open_add_sujet = false;
+            this.reload++;
         }
     }
 }
@@ -21,9 +26,11 @@ export default {
 
 <template>
     <div class="flex grow h-dvh flex-col">
-        <Add_sujet v-if="true" @close="this.open_add_sujet = false" :on_open="this.open_add_sujet" />
-        <RouterView />
-        <nav class="flex bg-secondary w-full mt-auto h-24 bottom-0">
+        <Add_sujet @created="sujet_created" v-if="true" @close="this.open_add_sujet = false" :on_open="this.open_add_sujet" />
+        <div class="overflow-auto">
+            <RouterView :reload="reload" ref="routerView" />
+        </div>
+        <nav v-if="$route.name != 'login'" class="flex bg-secondary w-full mt-auto max-h-[100px] min-h-[75px] h-52">
             <Bottom_navbar @add_sujet="add_sujet_dialog" />
         </nav>
     </div>

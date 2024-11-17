@@ -17,6 +17,7 @@
     "@primevue/forms": "^4.2.1",
     "@primevue/themes": "^4.2.0",
     "axios": "^1.7.7",
+    "buffer": "^6.0.3",
     "primeicons": "^7.0.0",
     "primevue": "^4.2.0",
     "tailwindcss-primeui": "^0.3.4",
