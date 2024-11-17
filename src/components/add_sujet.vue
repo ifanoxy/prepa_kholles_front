@@ -59,7 +59,7 @@ export default {
             this.loading = true;
 
             await ApiClient.route.sujets.create({
-                chapitre_id: this.chapitre_id,
+                chapitre_id: this.chapitre.id,
                 matiere_id: this.matiere.id,
                 image: this.src,
             });
@@ -85,13 +85,13 @@ export default {
 
                 <Button :disabled="loading" v-if="!isMobile()" severity="secondary" size="small" label="Prendre une photo" icon="pi pi-camera" @click="camera_visible = true" />
 
-                <FileUpload :disabled="loading" :choose-label="isMobile() ? 'Prendre une photo' : 'Importer'" accept="image/*" :maxFileSize="16_000_000" mode="basic" @select="onFileSelect" customUpload auto severity="secondary" class="whitespace-nowrap text-xs p-button-outlined" />
+                <FileUpload :disabled="loading" :choose-label="isMobile() ? 'Prendre une photo' : 'Importer'" accept=".png, .jpeg, .jpg" :maxFileSize="14_000_000" mode="basic" @select="onFileSelect" customUpload auto severity="secondary" class="whitespace-nowrap text-xs p-button-outlined" />
             </div>
 
             <label for="matiere" class="font-semibold">Matière</label>
-            <Select :disabled="loading" @value-change="onMatiereSelect" v-model="matiere" :options="matieres" optionLabel="name" placeholder="Sélectionner une matière" class="w-full md:w-56" />
+            <Select :disabled="loading" @value-change="onMatiereSelect" v-model="matiere" :options="matieres" optionLabel="name" placeholder="Sélectionner une matière" class="w-full" />
 
-            <Select :disabled="loading" v-if="selected_chapitres.length >= 1" @value-change="onMatiereSelect" v-model="chapitre" :options="selected_chapitres" optionLabel="name" placeholder="Sélectionner un chapitre" class="w-full md:w-56" />
+            <Select :disabled="loading" v-if="selected_chapitres.length >= 1" @value-change="onMatiereSelect" v-model="chapitre" :options="selected_chapitres" optionLabel="name" placeholder="Sélectionner un chapitre" class="w-full" />
         </div>
         <div class="flex gap-2">
             <Button :disabled="loading" class="w-full" type="button" label="Annuler" severity="secondary" @click="visible = false"></Button>

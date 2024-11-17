@@ -18,6 +18,7 @@ export default {
     },
     async mounted() {
         this.sujets = (await ApiClient.route.sujets.getAll()).data;
+        console.log(this.sujets);
         for (const sujet of this.sujets)
             sujet.image = Buffer.from(sujet.image, "base64");
     }
@@ -30,7 +31,7 @@ export default {
             <template #title>Kholle de {{ sujet.matiere.name }}</template>
             <template v-if="sujet.chapitre" #subtitle>{{ sujet.chapitre.name }}</template>
             <template #content>
-                <Image preview image-class="aspect-video object-cover" :src="sujet.image">
+                <Image preview image-class="h-52 aspect-[16/9] object-cover" :src="sujet.image">
                     <template #previewicon>
                         <i class="pi pi-search"></i>
                     </template>
