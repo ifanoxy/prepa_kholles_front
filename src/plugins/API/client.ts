@@ -34,7 +34,7 @@ class XApiClient {
     constructor()
     {
         this.client = axios.create({
-            baseURL: 'http://172.20.10.3:2000',
+            baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:2000',
             timeout: 10000,
             headers: { 'Content-Type': 'application/json' },
         });
