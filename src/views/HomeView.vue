@@ -10,17 +10,24 @@ export default {
     },
     data() {
         return {
+            loading: true,
             sujets: []
         }
     },
     async mounted() {
         this.sujets = (await ApiClient.route.sujets.getAll()).data;
+        this.loading = false;
     }
 }
 </script>
 
 <template>
-    <div class="flex-col w-full flex sm:flex-row sm:flex-wrap gap-4 p-4">
+    <div v-if="loading" class="flex justify-center flex-col gap-12 items-center grow h-full">
+        <ProgressSpinner style="width: 90px; height: 90px" strokeWidth="4" fill="transparent"
+                         animationDuration="1.5s" aria-label="Chargement des sujets" />
+        <p>Chargement des sujets</p>
+    </div>
+    <div v-else class="flex-col w-full flex sm:flex-row sm:flex-wrap gap-4 p-4">
         <Card class="sm:flex-1 sm:min-w-[40%] lg:min-w-[30%]" v-for="sujet of sujets">
             <template #title>Kholle de {{ sujet.matiere.name }}</template>
             <template v-if="sujet.chapitre" #subtitle>{{ sujet.chapitre.name }}</template>

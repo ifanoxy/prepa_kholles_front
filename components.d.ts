@@ -28,6 +28,7 @@ declare module 'vue' {
     Message: typeof import('primevue/message')['default']
     Navabr: typeof import('./src/components/navabr.vue')['default']
     Panel: typeof import('primevue/panel')['default']
+    ProgressSpinner: typeof import('primevue/progressspinner')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('primevue/select')['default']
