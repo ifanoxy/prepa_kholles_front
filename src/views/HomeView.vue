@@ -2,7 +2,7 @@
 import {ApiClient} from "@/plugins/API/client";
 
 export default {
-    props: ['reload'],
+    props: ['reload', 'filters'],
     watch: {
         async reload() {
             this.sujets = (await ApiClient.route.sujets.getAll()).data;
@@ -11,12 +11,31 @@ export default {
     data() {
         return {
             loading: true,
-            sujets: []
+            sujets: [],
+            filtered_sujets: [],
         }
     },
     async mounted() {
         this.sujets = (await ApiClient.route.sujets.getAll()).data;
         this.loading = false;
+    },
+    methods: {
+        filters_sujets: function() {
+            const sujets = [];
+            for (const sujet of this.sujets) {
+                if (this?.filters?.matiere)
+                {
+                    if (sujet.matiere?.id == this?.filters?.matiere?.id)
+                        sujets.push(sujet);
+                } else if (this?.filters?.chapitre)
+                {
+                    if (sujet.chapitre?.id == this?.filters?.chapitre?.id)
+                        sujets.push(sujet);
+                } else
+                    sujets.push(sujet);
+            }
+            return sujets;
+        }
     }
 }
 </script>
@@ -28,7 +47,7 @@ export default {
         <p>Chargement des sujets</p>
     </div>
     <div v-else class="flex-col w-full flex sm:flex-row sm:flex-wrap gap-4 p-4">
-        <Card class="sm:flex-1 sm:min-w-[40%] lg:min-w-[30%]" v-for="sujet of sujets">
+        <Card class="sm:flex-1 sm:min-w-[40%] lg:min-w-[30%]" v-for="sujet of filters_sujets(sujets)">
             <template #title>Kholle de {{ sujet.matiere.name }}</template>
             <template v-if="sujet.chapitre" #subtitle>{{ sujet.chapitre.name }}</template>
             <template #content>
