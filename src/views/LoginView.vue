@@ -74,7 +74,7 @@ export default {
             <Panel class="flex flex-col grow max-w-[500px]">
                 <Form v-slot="$form" :resolver="resolver" :initialValues="initialValues" @submit="onFormSubmit"  class="flex justify-center flex-col gap-4">
                     <div class="card flex-col flex justify-center">
-                        <AutoComplete v-model="initialValues.name" class="w-full" dropdown name="name"  placeholder="NOM Prénom" :suggestions="searchNames" @complete="search" />
+                        <AutoComplete v-model="initialValues.name" class="w-full" dropdown name="name"  placeholder="NOM Prénom" :suggestions="searchNames" @complete="search"  />
                         <Message v-if="$form.name?.invalid" severity="error" size="small" variant="simple">{{ $form.name.error?.message }}</Message>
                     </div>
                     <div class="flex flex-col gap-1">

@@ -19,3 +19,9 @@ export interface UserAuthBodyPassword {
     first_name: string,
     last_name: string,
 }
+
+export interface UserChangePasswordBody {
+    old_password: string,
+    new_password: string,
+    confirm_password: string,
+}

@@ -2,12 +2,19 @@ import axios, {type AxiosInstance, type AxiosRequestConfig} from 'axios';
 import type {ApiError, ApiResponse} from './types';
 import {PostUserGenToken} from "./routes/user/post_user_gen_token";
 import {PostUserAuth} from "./routes/user/post_user_auth";
-import type {UserAuthBody, UserAuthBodyToken, UserAuthData, UserGenTokenBody} from "@/plugins/API/routes/user/Users";
+import type {
+    UserAuthBody,
+    UserAuthBodyToken,
+    UserAuthData,
+    UserChangePasswordBody,
+    UserGenTokenBody
+} from "@/plugins/API/routes/user/Users";
 import {GetUsers} from "@/plugins/API/routes/users/get_users";
 import {GetMatieres} from "@/plugins/API/routes/matieres/get_matieres";
 import {GetChapitres} from "@/plugins/API/routes/chapitres/get_chapitres";
 import {PostCreateSujet} from "@/plugins/API/routes/sujets/post_create_sujet";
 import {GetSujets} from "@/plugins/API/routes/sujets/get_sujets";
+import {PostUserChangePassword} from "@/plugins/API/routes/user/post_user_change_password";
 
 class XApiClient {
     private client: AxiosInstance;
@@ -25,6 +32,7 @@ class XApiClient {
         user: {
             isAuth: (options: UserAuthBody) => Promise<ApiResponse<UserAuthData<UserAuthBody extends UserAuthBodyToken ? 'user_id' : 'token'>>>;
             createToken: (options: UserGenTokenBody) => Promise<UserGenTokenBody>
+            changePassword: (options: UserChangePasswordBody) => Promise<{ new_token: string}>
         },
         users: {
             getAll: () => Promise<ApiResponse<UsersData[]>>
@@ -53,6 +61,7 @@ class XApiClient {
             user: {
                 createToken: PostUserGenToken(this),
                 isAuth: PostUserAuth(this),
+                changePassword: PostUserChangePassword(this)
             },
             users: {
                 getAll: GetUsers(this)
@@ -124,8 +133,11 @@ class XApiClient {
         if (!localStorage.getItem('token'))return;
         console.log(error);
             if (axios.isAxiosError(error) && error.response) {
+            if (error.response.status === 401) {
+                localStorage.removeItem('token');
+            }
             return {
-                message: (Array.isArray(error.response.data.errors) ? error.response.data.errors.map((x: { message: string }) => x?.message).join("\n") : error.response.data.errors.message) || 'Unknown Error',
+                message: (Array.isArray(error.response.data.errors) ? error.response.data.errors.map((x: { message: string }) => x?.message).join("\n") : error.response.data?.errors?.message) || error.response.data?.errors,
                 code: error.response.status,
             };
         }
