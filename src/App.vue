@@ -45,8 +45,8 @@ export default {
 </script>
 
 <template>
-    <div class="flex grow h-dvh flex-col gap-4">
-        <nav class="absolute z-10 m-4 bg-secondary rounded-full bg-opacity-80 h-10 w-10 flex items-center justify-center" v-if="$route.name != 'login'" >
+    <div class="flex grow h-dvh flex-col">
+        <nav v-if="$route.name == 'home'" class="absolute z-10 m-4 bg-secondary rounded-full bg-opacity-80 h-10 w-10 flex items-center justify-center" >
             <i @click="open_search_dialog = !open_search_dialog" class="pi pi-search" />
         </nav>
 
@@ -67,7 +67,7 @@ export default {
         </div>
 
         <Add_sujet @created="sujet_created" v-if="$route.name != 'login'" @close="this.open_add_sujet = false" :on_open="this.open_add_sujet" />
-        <div class="overflow-auto flex h-full mt-12" :class="$route.name == 'login' ? 'grow' : ''">
+        <div class="overflow-auto flex h-full pt-12" :class="$route.name == 'login' ? 'grow' : ''">
 
             <RouterView :reload="reload" ref="routerView" v-slot="{ Component }">
                 <KeepAlive>
