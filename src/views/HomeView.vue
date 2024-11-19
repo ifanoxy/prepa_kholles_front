@@ -23,13 +23,13 @@ export default {
         filters_sujets: function() {
             const sujets = [];
             for (const sujet of this.sujets) {
-                if (this?.filters?.matiere)
-                {
-                    if (sujet.matiere?.id == this?.filters?.matiere?.id)
-                        sujets.push(sujet);
-                } else if (this?.filters?.chapitre)
+                if (this?.filters?.chapitre)
                 {
                     if (sujet.chapitre?.id == this?.filters?.chapitre?.id)
+                        sujets.push(sujet);
+                } else if (this?.filters?.matiere)
+                {
+                    if (sujet.matiere?.id == this?.filters?.matiere?.id)
                         sujets.push(sujet);
                 } else
                     sujets.push(sujet);
